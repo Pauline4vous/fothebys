@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Auction Lot</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Edit Auction Lot</h1>
+    </header>
+    <main>
+        <form action="/edit/{{ lot.id }}" method="POST">
+            <label for="lot_number">Lot Number:</label>
+            <input type="text" id="lot_number" name="lot_number" value="{{ lot.lot_number }}" required>
+
+            <label for="artist">Artist:</label>
+            <input type="text" id="artist" name="artist" value="{{ lot.artist }}" required>
+
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" value="{{ lot.year }}" required>
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="Painting" {% if lot.category == 'Painting' %}selected{% endif %}>Painting</option>
+                <option value="Drawing" {% if lot.category == 'Drawing' %}selected{% endif %}>Drawing</option>
+                <option value="Photograph" {% if lot.category == 'Photograph' %}selected{% endif %}>Photograph</option>
+                <option value="Sculpture" {% if lot.category == 'Sculpture' %}selected{% endif %}>Sculpture</option>
+                <option value="Carving" {% if lot.category == 'Carving' %}selected{% endif %}>Carving</option>
+            </select>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="5" required>{{ lot.description }}</textarea>
+
+            <label for="estimated_price">Estimated Price:</label>
+            <input type="number" step="0.01" id="estimated_price" name="estimated_price" value="{{ lot.estimated_price }}" required>
+
+            <button type="submit">Update Lot</button>
+        </form>
+        <a href="/admin">Back to Admin</a>
+    </main>
+    <footer>
+        <p>&copy; 2025 Fotheby's Auction House. All Rights Reserved.</p>
+    </footer>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

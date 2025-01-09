@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    <main>
+        <a href="/add" class="action add">Add New Lot</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lot Number</th>
+                    <th>Artist</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lot in lots %}
+                <tr data-archived="{{ 'true' if lot.archived else 'false' }}">
+                    <td>{{ lot.lot_number }}</td>
+                    <td>{{ lot.artist }}</td>
+                    <td>{{ lot.category }}</td>
+                    <td>
+                        <a href="/edit/{{ lot.id }}" class="action edit">Edit</a>
+                        <a href="/delete/{{ lot.id }}" class="action delete">Delete</a>
+                        <a href="/archive/{{ lot.id }}" class="action archive">Archive</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2025 Fotheby's Auction House. All Rights Reserved.</p>
+    </footer>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
