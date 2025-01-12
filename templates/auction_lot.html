@@ -15,8 +15,12 @@
             <h2>{{ lot.artist }}</h2>
             <p><strong>Year:</strong> {{ lot.year }}</p>
             <p><strong>Category:</strong> {{ lot.category }}</p>
+            <p><strong>Subject Classification:</strong> {{ lot.subject_classification }}</p>
             <p><strong>Description:</strong> {{ lot.description }}</p>
             <p><strong>Estimated Price:</strong> ${{ lot.estimated_price }}</p>
+            {% if lot.auction_date %}
+            <p><strong>Auction Date:</strong> {{ lot.auction_date.strftime('%Y-%m-%d') }}</p>
+            {% endif %}
             {% if lot.image %}
             <img src="/static/images/{{ lot.image }}" alt="Image of {{ lot.lot_number }}" width="100%">
             {% endif %}
