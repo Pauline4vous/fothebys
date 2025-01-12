@@ -3,34 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fotheby's Auctions</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Fotheby's Auctions</title>
 </head>
 <body>
     <header>
         <h1>Welcome to Fotheby's Auctions</h1>
-        <nav>
-            <a href="/admin" class="button">Admin Panel</a>
-            <a href="/add" class="button">Add Auction Lot</a>
+
+        <!-- Admin Access Button -->
+        <nav class="header-nav">
+            {% if session.get('user') %}
+                <!-- If logged in, display Add Item and Logout -->
+                <a href="/add" class="button">Add Auction Lot</a>
+                <a href="/logout" class="button">Logout</a>
+            {% else %}
+                <!-- If not logged in, display Login -->
+                <a href="/login" class="button">Admin Login</a>
+            {% endif %}
         </nav>
     </header>
-    <main>
-        <div class="lot-container">
-            {% for lot in lots %}
-            <div class="lot-card">
-                <h2>Lot {{ lot.lot_number }}</h2>
-                <p><strong>Artist:</strong> {{ lot.artist }}</p>
-                <p><strong>Year:</strong> {{ lot.year }}</p>
-                <p><strong>Category:</strong> {{ lot.category }}</p>
-                <p><strong>Estimated Price:</strong> ${{ lot.estimated_price }}</p>
-                <a href="/lot/{{ lot.id }}">View Details</a>
-            </div>
+
+    <!-- Search and Filter Form -->
+    <form method="GET" action="/" class="filter-form">
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="search" placeholder="Search by artist or description" value="{{ request.args.get('search', '') }}">
+
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+                <option value="{{ category }}" {% if request.args.get('category') == category %}selected{% endif %}>
+                    {{ category }}
+                </option>
             {% endfor %}
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2025 Fotheby's Auction House. All Rights Reserved.</p>
-    </footer>
-    <script src="/static/js/script.js"></script>
+        </select>
+
+        <label for="year">Year:</label>
+        <select id="year" name="year">
+            <option value="">All Years</option>
+            {% for year in years %}
+                <option value="{{ year }}" {% if request.args.get('year') == year|string %}selected{% endif %}>
+                    {{ year }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Apply Filters</button>
+    </form>
+
+    <!-- Auction Lots -->
+    <div class="lot-container">
+        {% if lots %}
+            {% for lot in lots %}
+                <div class="lot-card">
+                    <h2>{{ lot.artist }}</h2>
+                    <p>{{ lot.description }}</p>
+                    <p>Category: {{ lot.category }}</p>
+                    <p>Year: {{ lot.year }}</p>
+                    <p>Estimated Price: ${{ lot.estimated_price }}</p>
+                    <p>Auction Date: {{ lot.auction_date.strftime('%Y-%m-%d') }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No lots match your search/filter criteria.</p>
+        {% endif %}
+    </div>
 </body>
 </html>

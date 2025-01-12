@@ -3,43 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Admin Panel</title>
 </head>
 <body>
     <header>
-        <h1>Admin Dashboard</h1>
+        <h1>Admin Panel</h1>
+
+        <!-- Navigation Buttons -->
+        <nav class="header-nav">
+            <a href="/" class="button">Return to Homepage</a>
+            <a href="/add" class="button">Add Auction Lot</a>
+            <a href="/logout" class="button">Logout</a>
+        </nav>
     </header>
-    <main>
-        <a href="/add" class="action add">Add New Lot</a>
-        <table>
-            <thead>
-                <tr>
-                    <th>Lot Number</th>
-                    <th>Artist</th>
-                    <th>Category</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for lot in lots %}
-                <tr data-archived="{{ 'true' if lot.archived else 'false' }}">
-                    <td>{{ lot.lot_number }}</td>
-                    <td>{{ lot.artist }}</td>
-                    <td>{{ lot.category }}</td>
-                    <td>
-                        <a href="/edit/{{ lot.id }}" class="action edit">Edit</a>
-                        <a href="/delete/{{ lot.id }}" class="action delete">Delete</a>
-                        <a href="/archive/{{ lot.id }}" class="action archive">Archive</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </main>
-    <footer>
-        <p>&copy; 2025 Fotheby's Auction House. All Rights Reserved.</p>
-    </footer>
-    <script src="/static/js/script.js"></script>
+
+    <!-- Lots Display -->
+    <div class="lot-container">
+        {% for lot in lots %}
+            <div class="lot-card">
+                <h2>{{ lot.artist }}</h2>
+                <p>{{ lot.description }}</p>
+                <p>Category: {{ lot.category }}</p>
+                <p>Year: {{ lot.year }}</p>
+                <p>Estimated Price: ${{ lot.estimated_price }}</p>
+                <p>Auction Date: {{ lot.auction_date.strftime('%Y-%m-%d') }}</p>
+                <p>Status: {{ 'Archived' if lot.archived else 'Active' }}</p>
+
+                <!-- Edit Button -->
+                <a href="/edit/{{ lot.id }}" class="button">Edit</a>
+
+                <!-- Archive/Unarchive Button -->
+                {% if lot.archived %}
+                    <form method="POST" action="/unarchive/{{ lot.id }}" style="display:inline;">
+                        <button type="submit" class="button">Unarchive</button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="/archive/{{ lot.id }}" style="display:inline;">
+                        <button type="submit" class="button">Archive</button>
+                    </form>
+                {% endif %}
+
+                <!-- Delete Button -->
+                <form method="POST" action="/delete/{{ lot.id }}" style="display:inline;">
+                    <button type="submit" class="button">Delete</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
 </body>
 </html>
